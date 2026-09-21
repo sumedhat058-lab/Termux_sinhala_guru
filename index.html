@@ -37,7 +37,6 @@
       padding-bottom: 60px;
     }
 
-    /* Top Navigation Bar */
     .navbar {
       background-color: var(--nav-bg);
       padding: 12px 15px;
@@ -54,17 +53,24 @@
       color: #00ff66;
       font-weight: bold;
       font-size: 15px;
-      letter-spacing: 0.5px;
     }
 
-    /* Main Container */
+    .admin-link {
+      color: #fff;
+      background: var(--accent-color);
+      padding: 5px 10px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
     .container {
       max-width: 650px;
       margin: 20px auto;
       padding: 0 15px;
     }
 
-    /* Post Card */
     .card {
       background: var(--card-bg);
       border-radius: 12px;
@@ -77,11 +83,8 @@
     .card h2 {
       font-size: 18px;
       margin-bottom: 12px;
-      line-height: 1.4;
-      color: var(--text-color);
     }
 
-    /* Terminal View */
     .terminal-box {
       background-color: var(--terminal-bg);
       color: #00ff66;
@@ -105,7 +108,7 @@
     .card-footer {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 10px;
       font-size: 11px;
     }
 
@@ -115,14 +118,12 @@
       padding: 4px 8px;
       border-radius: 3px;
       font-weight: bold;
-      text-transform: uppercase;
     }
 
     .date {
       color: #888;
     }
 
-    /* Theme Floating Button */
     .theme-toggle {
       position: fixed;
       bottom: 20px;
@@ -135,35 +136,30 @@
       color: #fff;
       font-size: 18px;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation -->
   <nav class="navbar">
     <div class="nav-title">● TERMUX & HACKING SINHALA</div>
+    <a href="admin.html" class="admin-link">🔑 Admin Login</a>
   </nav>
 
-  <!-- Posts Container -->
   <div class="container" id="postsContainer">
     <p style="text-align: center; color: #888;">ලිපි ලබාගනිමින් පවතී...</p>
   </div>
 
-  <!-- Theme Toggle -->
   <button class="theme-toggle" id="themeToggle">☀️</button>
 
   <script>
-    // posts.json ෆයිල් එකෙන් දත්ත ලබාගැනීම
     async function loadPosts() {
       try {
-        const response = await fetch('posts.json');
-        const posts = await response.json();
+        const res = await fetch('posts.json?v=' + Date.now());
+        const posts = await res.json();
         renderPosts(posts);
-      } catch (error) {
-        document.getElementById('postsContainer').innerHTML = 
-          '<p style="text-align: center; color: red;">ලිපි ලබාගැනීමට අපොහොසත් විය. posts.json ෆයිල් එක පරීක්ෂා කරන්න.</p>';
+      } catch (err) {
+        document.getElementById('postsContainer').innerHTML = '<p style="text-align: center;">තවම ලිපි ඇතුළත් කර නොමැත.</p>';
       }
     }
 
@@ -175,20 +171,15 @@
         const card = document.createElement('article');
         card.className = 'card';
         
-        let codeBlock = '';
-        if (post.code && post.code.trim() !== '') {
-          codeBlock = `<div class="terminal-box">${escapeHtml(post.code)}</div>`;
-        }
+        let codeBlock = post.code ? `<div class="terminal-box">${escapeHtml(post.code)}</div>` : '';
 
         card.innerHTML = `
           <h2>${escapeHtml(post.title)}</h2>
           ${codeBlock}
           <p class="card-desc">${escapeHtml(post.desc)}</p>
           <div class="card-footer">
-            <div>
-              <span class="tag">${escapeHtml(post.tag)}</span>
-              <span class="date">/ ${post.date}</span>
-            </div>
+            <span class="tag">${escapeHtml(post.tag)}</span>
+            <span class="date">/ ${post.date}</span>
           </div>
         `;
         container.appendChild(card);
@@ -199,7 +190,6 @@
       return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    // Dark/Light Theme
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.addEventListener('click', () => {
       if (document.body.getAttribute('data-theme') === 'dark') {
