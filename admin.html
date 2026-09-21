@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Post Publisher</title>
+  <style>
+    body { font-family: sans-serif; background: #0d1117; color: #fff; padding: 20px; display: flex; justify-content: center; }
+    .box { background: #161b22; padding: 25px; border-radius: 10px; width: 100%; max-width: 500px; border: 1px solid #30363d; }
+    h2 { color: #00ff66; margin-bottom: 20px; }
+    label { display: block; margin-top: 10px; font-size: 13px; font-weight: bold; }
+    input, textarea { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #30363d; background: #0d1117; color: #fff; font-size: 14px; box-sizing: border-box; }
+    button { background: #ff3e00; color: white; border: none; padding: 12px; border-radius: 5px; width: 100%; margin-top: 20px; font-weight: bold; cursor: pointer; font-size: 15px; }
+    .status { margin-top: 15px; padding: 10px; border-radius: 5px; display: none; text-align: center; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>🔑 Admin Post Publisher</h2>
+  
+  <label>1. GitHub Personal Access Token (PAT):</label>
+  <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+
+  <label>2. GitHub Username:</label>
+  <input type="text" id="ghUser" placeholder="ඔයාගේ GitHub Username එක">
+
+  <label>3. Repository Name:</label>
+  <input type="text" id="ghRepo" placeholder="sinhala-hacking-hub">
+
+  <hr style="margin-top: 20px; border-color: #30363d;">
+
+  <label>ලිපියේ මාතෘකාව (Title):</label>
+  <input type="text" id="postTitle" placeholder="උදා: Termux එකට Nano Text Editor දාගනිමු">
+
+  <label>Category / Tag:</label>
+  <input type="text" id="postTag" placeholder="TERMUX COMMANDS">
+
+  <label>Terminal Commands / Code (ඕනනම් විතරක්):</label>
+  <textarea id="postCode" rows="3" placeholder="pkg install nano -y"></textarea>
+
+  <label>විස්තරය (Sinhala Description):</label>
+  <textarea id="postDesc" rows="5" placeholder="මෙතන විස්තරය සිංහලෙන් ලියන්න..."></textarea>
+
+  <button id="publishBtn">🚀 Publish To Website</button>
+  <div id="statusBox" class="status"></div>
+</div>
+
+<script>
+  document.getElementById('publishBtn').addEventListener('click', async () => {
+    const token = document.getElementById('ghToken').value.trim();
+    const user = document.getElementById('ghUser').value.trim();
+    const repo = document.getElementById('ghRepo').value.trim();
+    
+    const title = document.getElementById('postTitle').value;
+    const tag = document.getElementById('postTag').value || 'GENERAL';
+    const code = document.getElementById('postCode').value;
+    const desc = document.getElementById('postDesc').value;
+
+    const statusBox = document.getElementById('statusBox');
+
+    if (!token || !user || !repo || !title || !desc) {
+      alert('කරුණාකර සියලු විස්තර පුරවන්න!');
+      return;
+    }
+
+    statusBox.style.display = 'block';
+    statusBox.style.background = '#333';
+    statusBox.innerHTML = 'ක්‍රියාවලිය සිදුවෙමින් පවතී...';
+
+    const url = `https://api.github.com/repos/${user}/${repo}/contents/posts.json`;
+
+    try {
+      let currentPosts = [];
+      let sha = "";
+
+      // Get existing posts
+      const getRes = await fetch(url, {
+        headers: { 'Authorization': `token ${token}` }
+      });
+
+      if (getRes.ok) {
+        const data = await getRes.json();
+        sha = data.sha;
+        currentPosts = JSON.parse(atob(data.content));
+      }
+
+      // Add new post
+      const newPost = {
+        id: Date.now(),
+        title: title,
+        tag: tag.toUpperCase(),
+        code: code,
+        desc: desc,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()
+      };
+
+      currentPosts.unshift(newPost);
+
+      // Save to GitHub
+      const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(currentPosts, null, 2))));
+
+      const putRes = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: `Added new post: ${title}`,
+          content: updatedContent,
+          sha: sha ? sha : undefined
+        })
+      });
+
+      if (putRes.ok) {
+        statusBox.style.background = '#28a745';
+        statusBox.innerHTML = '✅ සාර්ථකව Publish වුණා! විනාඩියකින් Website එක බලන්න.';
+        document.getElementById('postTitle').value = '';
+        document.getElementById('postCode').value = '';
+        document.getElementById('postDesc').value = '';
+      } else {
+        throw new Error('GitHub Update Error');
+      }
+
+    } catch (err) {
+      statusBox.style.background = '#dc3545';
+      statusBox.innerHTML = '❌ දෝෂයක් සිදු විය! GitHub Token සහ Username නිවැරදිදැයි බලන්න.';
+    }
+  });
+</script>
+</body>
+</html>
