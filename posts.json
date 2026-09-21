@@ -1,26 +1,18 @@
 [
   {
-    "id": 1789964795462,
-    "title": "Cacafire සහ Cacademo ස්ථාපනය කරගමු",
-    "tag": "COOL",
-    "code": "pkg update && pkg upgrade -y\npkg install libcaca -y\ncacafire\ncacademo",
-    "desc": "Termux එකෙන් කෙනෙක්ට වැඩ පෙන්නන්නනම් සුපිරියක්",
-    "date": "SEP 21, 2026"
-  },
-  {
     "id": 1,
-    "title": "Nano Text Editor in Termux â à·à·à¶®à·à¶´à¶±à¶º à·à· à¶·à·à·à·à¶­à¶º",
+    "title": "Nano Text Editor in Termux - ස්ථාපනය සහ භාවිතය",
     "tag": "TERMUX COMMANDS",
-    "code": "pkg update && pkg upgrade -y\npkg install nano -y\n\n# à¶´à·à·à·à¶ à·à¶ à· à¶à¶»à¶± à·à·à¶§à·:\nnano myfile.txt",
-    "desc": "Nano à¶à·à¶ºà¶±à·à¶±à· Termux terminal à¶à¶ à¶à¶­à·à·à· à¶à¶­à· à¶´à·à·à·à·à·à¶±à· Text Files à·à·à¶¯à· à¶à·à¶±à·à¶¸à¶§ à·à· Edit à¶à¶» à¶à·à¶±à·à¶¸à¶§ à¶·à·à·à·à¶­ à¶à· à·à·à¶à· à·à¶»à¶½ Command-line Text Editor à¶à¶à¶à·.",
+    "code": "pkg update && pkg upgrade -y\npkg install nano -y\n\n# පාවිච්චි කරන හැටි:\nnano myfile.txt",
+    "desc": "Nano කියන්නේ Termux terminal එක ඇතුළෙ ඉතා පහසුවෙන් Text Files සාදා ගැනීමට සහ Edit කර ගැනීමට භාවිත කළ හැකි සරල Command-line Text Editor එකක්.",
     "date": "JULY 27, 2026"
   },
   {
     "id": 2,
-    "title": "Midnight Commander (mc) â Termux File Manager à¶à¶à¶à· à¶¯à·à¶à¶¸à·",
+    "title": "Midnight Commander (mc) - Termux File Manager එකක් දාගමු",
     "tag": "COOL TOOLS",
-    "code": "pkg install mc -y\n\n# Start à¶à·à¶»à·à¶¸à¶§:\nmc",
-    "desc": "Midnight Commander à¶à·à¶ºà¶±à·à¶±à· Terminal à¶à¶ à¶à¶­à·à·à·à¶±à·à¶¸ à¶½à·à¶´à·à¶à·à¶±à· (Files and Folders) à¶´à·à·à·à·à·à¶±à· Manage à¶à¶»à¶à¶­ à·à·à¶à· File Manager à¶à¶à¶à·.",
+    "code": "pkg install mc -y\n\n# Start කිරීමට:\nmc",
+    "desc": "Midnight Commander කියන්නේ Terminal එක ඇතුළෙන්ම ලිපිගොනු (Files and Folders) පහසුවෙන් Manage කරගත හැකි File Manager එකක්.",
     "date": "JULY 26, 2026"
   }
 ]
